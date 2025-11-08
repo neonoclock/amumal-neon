@@ -64,8 +64,8 @@ public class CommentServiceImpl implements CommentService {
 
         return new CommentUpdatedResponse(
                 comment.getId(),
-                comment.getContent(),
-                TimeUtil.format(comment.getUpdatedAt())
+                TimeUtil.format(comment.getUpdatedAt()),
+                comment.getContent()
         );
     }
 
