@@ -43,14 +43,17 @@ public class PostServiceImpl implements PostService {
         this.em = em;
     }
 
-    @Override
-    public PagedResponse<PostSummaryResponse> getPosts(int page, int limit, PostSortKey sort) {
-        Sort s = switch (sort) {
+    private Sort toSort(PostSortKey sortKey) {
+        return switch (sortKey) {
             case DATE  -> Sort.by(Sort.Direction.DESC, "createdAt");
             case LIKES -> Sort.by(Sort.Direction.DESC, "likes");
             case VIEWS -> Sort.by(Sort.Direction.DESC, "views");
         };
-        Pageable pageable = PageRequest.of(page, limit, s);
+    }
+
+    @Override
+    public PagedResponse<PostSummaryResponse> getPosts(int page, int limit, PostSortKey sort) {
+        Pageable pageable = PageRequest.of(page, limit, toSort(sort));
         Page<Post> pageData = postRepo.findAll(pageable);
 
         var items = pageData.getContent().stream()
@@ -71,13 +74,7 @@ public class PostServiceImpl implements PostService {
             String keyword, Long authorId, Integer minLikes, Integer minViews,
             int page, int limit, PostSortKey sort) {
 
-        Sort s = switch (sort) {
-            case DATE  -> Sort.by(Sort.Direction.DESC, "createdAt");
-            case LIKES -> Sort.by(Sort.Direction.DESC, "likes");
-            case VIEWS -> Sort.by(Sort.Direction.DESC, "views");
-        };
-        Pageable pageable = PageRequest.of(page, limit, s);
-
+        Pageable pageable = PageRequest.of(page, limit, toSort(sort));
         Page<Post> result = postRepo.search(keyword, authorId, minLikes, minViews, pageable);
 
         var items = result.getContent().stream()
