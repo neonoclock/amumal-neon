@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.017s</div>
+<div class="counter">0.014s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">namedQuery_works()</td>
-<td class="success">0.017s</td>
+<td class="success">0.014s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,9 +87,9 @@
 <div class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2025-11-08T21:38:42.708+09:00  INFO 63975 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.ktbapi.NamedQueryTest]: NamedQueryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-11-08T21:38:42.709+09:00  INFO 63975 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.ktbapi.KtbapiApplication for test class com.example.ktbapi.NamedQueryTest
-2025-11-08T21:38:42.711+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+<pre>2025-11-10T08:32:59.152+09:00  INFO 73264 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.ktbapi.NamedQueryTest]: NamedQueryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-11-10T08:32:59.153+09:00  INFO 73264 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.ktbapi.KtbapiApplication for test class com.example.ktbapi.NamedQueryTest
+2025-11-10T08:32:59.155+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         &quot;user&quot;
@@ -103,7 +103,7 @@ Hibernate:
         (created_at, email, nickname, password, profile_image, user_role, updated_at, user_id) 
     values
         (?, ?, ?, ?, ?, ?, ?, default)
-2025-11-08T21:38:42.714+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.156+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         &quot;user&quot;
@@ -117,7 +117,7 @@ Hibernate:
         (created_at, email, nickname, password, profile_image, user_role, updated_at, user_id) 
     values
         (?, ?, ?, ?, ?, ?, ?, default)
-2025-11-08T21:38:42.715+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.156+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         posts
@@ -131,7 +131,7 @@ Hibernate:
         (user_id, content, created_at, image_url, likes, title, updated_at, views, post_id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, default)
-2025-11-08T21:38:42.716+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.159+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         posts
@@ -145,7 +145,7 @@ Hibernate:
         (user_id, content, created_at, image_url, likes, title, updated_at, views, post_id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, default)
-2025-11-08T21:38:42.716+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.159+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         posts
@@ -159,7 +159,7 @@ Hibernate:
         (user_id, content, created_at, image_url, likes, title, updated_at, views, post_id) 
     values
         (?, ?, ?, ?, ?, ?, ?, ?, default)
-2025-11-08T21:38:42.717+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.160+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     select
         u1_0.user_id,
         u1_0.created_at,
@@ -187,7 +187,7 @@ Hibernate:
         &quot;user&quot; u1_0 
     where
         u1_0.email=?
-2025-11-08T21:38:42.719+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.162+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     select
         u1_0.user_id,
         u1_0.created_at,
@@ -215,7 +215,7 @@ Hibernate:
         &quot;user&quot; u1_0 
     where
         u1_0.nickname like ('%'||?||'%') escape ''
-2025-11-08T21:38:42.721+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.164+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     select
         p1_0.post_id,
         p1_0.user_id,
@@ -245,7 +245,7 @@ Hibernate:
         posts p1_0 
     where
         p1_0.user_id=?
-2025-11-08T21:38:42.724+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.166+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     select
         count(p1_0.post_id) 
     from
@@ -270,7 +270,7 @@ Hibernate:
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 8.14.3</a> at 2025. 11. 8. 오후 9:38:43</p>
+<a href="https://www.gradle.org">Gradle 8.14.3</a> at 2025. 11. 10. 오전 8:32:59</p>
 </div>
 </div>
 </body>

@@ -1,0 +1,21 @@
+{
+  "groups": [
+    {
+      "name": "app.init",
+      "type": "com.example.ktbapi.common.config.AppInitProperties",
+      "sourceType": "com.example.ktbapi.common.config.AppInitProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "app.init.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.example.ktbapi.common.config.AppInitProperties",
+      "defaultValue": false
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

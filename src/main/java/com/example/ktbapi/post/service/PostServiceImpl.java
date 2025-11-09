@@ -75,7 +75,16 @@ public class PostServiceImpl implements PostService {
             int page, int limit, PostSortKey sort) {
 
         Pageable pageable = PageRequest.of(page, limit, toSort(sort));
-        Page<Post> result = postRepo.search(keyword, authorId, minLikes, minViews, pageable);
+
+        // ✅ PostSearchCond 객체로 조건 구성
+        PostSearchCond cond = new PostSearchCond();
+        cond.keyword = keyword;
+        cond.authorId = authorId;
+        cond.minLikes = minLikes;
+        cond.minViews = minViews;
+        cond.sort = sort;
+
+        Page<Post> result = postRepo.search(cond, pageable);
 
         var items = result.getContent().stream()
                 .map(PostMapper::toSummary)

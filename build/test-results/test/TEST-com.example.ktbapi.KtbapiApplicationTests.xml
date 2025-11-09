@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.ktbapi.KtbapiApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-08T12:38:42.704Z" hostname="neonui-MacBookPro.local" time="0.002">
+<testsuite name="com.example.ktbapi.KtbapiApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-09T23:32:59.149Z" hostname="neonui-MacBookPro.local" time="0.002">
   <properties/>
   <testcase name="contextLoads()" classname="com.example.ktbapi.KtbapiApplicationTests" time="0.002"/>
-  <system-out><![CDATA[2025-11-08T21:38:42.703+09:00  INFO 63975 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.ktbapi.KtbapiApplicationTests]: KtbapiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-11-08T21:38:42.704+09:00  INFO 63975 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.ktbapi.KtbapiApplication for test class com.example.ktbapi.KtbapiApplicationTests
+  <system-out><![CDATA[2025-11-10T08:32:59.148+09:00  INFO 73264 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.ktbapi.KtbapiApplicationTests]: KtbapiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-11-10T08:32:59.148+09:00  INFO 73264 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.ktbapi.KtbapiApplication for test class com.example.ktbapi.KtbapiApplicationTests
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

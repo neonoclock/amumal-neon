@@ -1,11 +1,11 @@
 package com.example.ktbapi.post.repo;
 
+import com.example.ktbapi.common.query.QuerydslPredicates;
+import com.example.ktbapi.post.dto.PostSearchCond;
 import com.example.ktbapi.post.model.Post;
 import com.example.ktbapi.post.model.QPost;
 import com.example.ktbapi.user.model.QUser;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.*;
@@ -15,15 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.ktbapi.common.query.QuerydslPredicates.*;
+
 @Repository
 @Transactional(readOnly = true)
 public class PostJpaRepositoryImpl implements PostQueryRepository {
 
     private final JPAQueryFactory query;
     private final EntityManager em;
-
     private static final QPost p = QPost.post;
-    private static final QUser u  = QUser.user;
+    private static final QUser u = QUser.user;
 
     public PostJpaRepositoryImpl(EntityManager em) {
         this.em = em;
@@ -32,8 +33,7 @@ public class PostJpaRepositoryImpl implements PostQueryRepository {
 
     @Override
     public Optional<Post> findDetailWithAuthor(Long postId) {
-        Post found = query
-                .selectFrom(p)
+        Post found = query.selectFrom(p)
                 .join(p.author, u).fetchJoin()
                 .where(p.id.eq(postId))
                 .fetchOne();
@@ -63,55 +63,38 @@ public class PostJpaRepositoryImpl implements PostQueryRepository {
     }
 
     @Override
-    public Page<Post> search(String keyword, Long authorId, Integer minLikes, Integer minViews, Pageable pageable) {
+    public Page<Post> search(PostSearchCond cond, Pageable pageable) {
         BooleanBuilder where = new BooleanBuilder();
 
-        if (keyword != null && !keyword.isBlank()) {
-            String like = "%" + keyword.trim().toLowerCase() + "%";
-            where.and(
-                    Expressions.booleanTemplate("lower({0}) like {1}", p.title, like)
-                            .or(Expressions.booleanTemplate("lower({0}) like {1}", p.content, like))
-            );
-        }
-        if (authorId != null) {
-            where.and(p.author.id.eq(authorId));
-        }
-        if (minLikes != null) {
-            where.and(p.likes.goe(minLikes));
-        }
-        if (minViews != null) {
-            where.and(p.views.goe(minViews));
-        }
+        addNotBlank(where, cond.keyword,
+                () -> p.title.containsIgnoreCase(cond.keyword)
+                        .or(p.content.containsIgnoreCase(cond.keyword)));
+        addNotNull(where, cond.authorId, () -> p.author.id.eq(cond.authorId));
+        addNotNull(where, cond.minLikes, () -> p.likes.goe(cond.minLikes));
+        addNotNull(where, cond.minViews, () -> p.views.goe(cond.minViews));
+        QuerydslPredicates.addBetween(where, cond.fromCreatedAt, cond.toCreatedAt,
+                () -> p.createdAt.goe(cond.fromCreatedAt),
+                () -> p.createdAt.loe(cond.toCreatedAt));
 
-        OrderSpecifier<?>[] orderSpecifiers = pageable.getSort().stream()
-                .map(order -> {
-                    var path = switch (order.getProperty()) {
-                        case "createdAt" -> p.createdAt;
-                        case "likes"     -> p.likes;
-                        case "views"     -> p.views;
-                        default          -> p.createdAt; // fallback
-                    };
-                    return order.isAscending() ? path.asc() : path.desc();
-                })
-                .toArray(OrderSpecifier[]::new);
-
-        Long totalL = query.select(p.count())
-                .from(p)
-                .where(where)
-                .fetchOne();
-        long total = totalL == null ? 0L : totalL;
-
-        if (total == 0) {
-            return new PageImpl<>(List.of(), pageable, 0);
-        }
-
-        List<Post> content = query.selectFrom(p)
+        var base = query.selectFrom(p)
                 .leftJoin(p.author, u).fetchJoin()
-                .where(where)
-                .orderBy(orderSpecifiers)
+                .where(where);
+
+        if (pageable.getSort().isEmpty()) base.orderBy(p.createdAt.desc());
+        else pageable.getSort().forEach(s -> {
+            switch (s.getProperty()) {
+                case "likes" -> base.orderBy(s.isAscending() ? p.likes.asc() : p.likes.desc());
+                case "views" -> base.orderBy(s.isAscending() ? p.views.asc() : p.views.desc());
+                default -> base.orderBy(s.isAscending() ? p.createdAt.asc() : p.createdAt.desc());
+            }
+        });
+
+        List<Post> content = base
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
+        long total = query.select(p.count()).from(p).where(where).fetchOne();
 
         return new PageImpl<>(content, pageable, total);
     }

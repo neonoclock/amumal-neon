@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.ktbapi.board.BoardInheritanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-08T12:38:42.798Z" hostname="neonui-MacBookPro.local" time="0.011">
+<testsuite name="com.example.ktbapi.board.BoardInheritanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-09T23:32:59.237Z" hostname="neonui-MacBookPro.local" time="0.012">
   <properties/>
-  <testcase name="joined_inheritance_save_and_load()" classname="com.example.ktbapi.board.BoardInheritanceTest" time="0.011"/>
-  <system-out><![CDATA[2025-11-08T21:38:42.794+09:00  INFO 63975 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.ktbapi.board.BoardInheritanceTest]: BoardInheritanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-11-08T21:38:42.798+09:00  INFO 63975 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.ktbapi.KtbapiApplication for test class com.example.ktbapi.board.BoardInheritanceTest
-2025-11-08T21:38:42.801+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+  <testcase name="joined_inheritance_save_and_load()" classname="com.example.ktbapi.board.BoardInheritanceTest" time="0.012"/>
+  <system-out><![CDATA[2025-11-10T08:32:59.234+09:00  INFO 73264 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.ktbapi.board.BoardInheritanceTest]: BoardInheritanceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-11-10T08:32:59.237+09:00  INFO 73264 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.ktbapi.KtbapiApplication for test class com.example.ktbapi.board.BoardInheritanceTest
+2025-11-10T08:32:59.241+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         board
@@ -18,7 +18,7 @@ Hibernate:
         (content, title, board_type, id) 
     values
         (?, ?, 'NOTICE', default)
-2025-11-08T21:38:42.802+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.242+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         notice
@@ -32,7 +32,7 @@ Hibernate:
         (notice_level, id) 
     values
         (?, ?)
-2025-11-08T21:38:42.802+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.242+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         board
@@ -46,7 +46,7 @@ Hibernate:
         (content, title, board_type, id) 
     values
         (?, ?, 'FREE', default)
-2025-11-08T21:38:42.803+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.242+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         free
@@ -60,7 +60,7 @@ Hibernate:
         (category, id) 
     values
         (?, ?)
-2025-11-08T21:38:42.803+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.243+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         board
@@ -74,7 +74,7 @@ Hibernate:
         (content, title, board_type, id) 
     values
         (?, ?, 'QNA', default)
-2025-11-08T21:38:42.803+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.243+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     insert 
     into
         qna
@@ -88,7 +88,7 @@ Hibernate:
         (solved, id) 
     values
         (?, ?)
-2025-11-08T21:38:42.805+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.245+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     select
         n1_0.id,
         n1_1.content,
@@ -114,7 +114,7 @@ Hibernate:
             on n1_0.id=n1_1.id 
     where
         n1_0.id=?
-2025-11-08T21:38:42.806+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.246+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     select
         f1_0.id,
         f1_1.content,
@@ -140,7 +140,7 @@ Hibernate:
             on f1_0.id=f1_1.id 
     where
         f1_0.id=?
-2025-11-08T21:38:42.807+09:00 DEBUG 63975 --- [    Test worker] org.hibernate.SQL                        : 
+2025-11-10T08:32:59.246+09:00 DEBUG 73264 --- [    Test worker] org.hibernate.SQL                        : 
     select
         q1_0.id,
         q1_1.content,
