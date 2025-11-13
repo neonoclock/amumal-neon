@@ -11,7 +11,9 @@ import com.example.ktbapi.user.repo.UserJpaRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "http://172.16.24.172:5500")
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "Users", description = "회원 가입/조회/수정/삭제")

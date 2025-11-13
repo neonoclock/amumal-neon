@@ -10,8 +10,7 @@
     {
       "name": "app.init.enabled",
       "type": "java.lang.Boolean",
-      "sourceType": "com.example.ktbapi.common.config.AppInitProperties",
-      "defaultValue": false
+      "sourceType": "com.example.ktbapi.common.config.AppInitProperties"
     }
   ],
   "hints": [],
