@@ -27,7 +27,8 @@ public final class PostMapper {
                 p.getAuthor() != null ? p.getAuthor().getNickname() : null,
                 p.getLikes(),
                 p.getViews(),
-                fmt(p.getCreatedAt())
+                fmt(p.getCreatedAt()),
+                p.getAuthor() != null ? p.getAuthor().getProfileImage() : null
         );
     }
 
@@ -47,6 +48,7 @@ public final class PostMapper {
                 p.getTitle(),
                 p.getAuthor() != null ? p.getAuthor().getId() : null,
                 p.getAuthor() != null ? p.getAuthor().getNickname() : null,
+                p.getAuthor() != null ? p.getAuthor().getProfileImage() : null, 
                 p.getContent(),
                 p.getImageUrl(),
                 p.getLikes(),

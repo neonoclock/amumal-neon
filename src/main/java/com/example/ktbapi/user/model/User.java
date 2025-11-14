@@ -35,7 +35,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, name = "user_role", length = 20)
     private UserRole role = UserRole.USER;
 
-    @Column(name = "profile_image", length = 500)
+    @Column(name = "profile_image", columnDefinition = "LONGTEXT")
     private String profileImage;
 
     protected User() { }

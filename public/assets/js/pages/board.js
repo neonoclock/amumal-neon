@@ -1,6 +1,7 @@
 import { $, on } from "../core/dom.js";
-import { loadUserId } from "../core/storage.js";
+import { loadUserId, clearAuth } from "../core/storage.js";
 import { PostsAPI } from "../api/posts.js";
+import { AuthAPI } from "../api/auth.js";
 
 function escapeHtml(str = "") {
   return String(str)
@@ -12,8 +13,16 @@ function escapeHtml(str = "") {
 }
 
 function createPostElement(post) {
-  const { id, title, authorNickname, likes, views, createdAt, commentsCount } =
-    post;
+  const {
+    id,
+    title,
+    authorNickname,
+    likes,
+    views,
+    createdAt,
+    commentsCount,
+    authorProfileImage,
+  } = post;
 
   const article = document.createElement("article");
   article.className = "post";
@@ -39,6 +48,15 @@ function createPostElement(post) {
     </footer>
   `;
 
+  const avatarEl = article.querySelector(".author-avatar");
+  if (avatarEl && authorProfileImage) {
+    avatarEl.style.backgroundImage = `url(${authorProfileImage})`;
+    avatarEl.style.backgroundSize = "cover";
+    avatarEl.style.backgroundPosition = "center";
+    avatarEl.style.backgroundRepeat = "no-repeat";
+    avatarEl.style.border = "none";
+  }
+
   return article;
 }
 
@@ -49,15 +67,17 @@ async function loadPosts() {
   boardEl.innerHTML = "";
 
   try {
-    const pageData = await PostsAPI.getList({
+    const res = await PostsAPI.getList({
       page: 0,
       limit: 10,
       sort: "DATE",
     });
 
-    const list = pageData?.content ?? pageData ?? [];
+    console.log("[BOARD] posts list res:", res);
 
-    if (!Array.isArray(list) || list.length === 0) {
+    const rawList = res?.items ?? [];
+
+    if (!Array.isArray(rawList) || rawList.length === 0) {
       const empty = document.createElement("p");
       empty.textContent = "아직 작성된 게시글이 없습니다.";
       empty.className = "empty";
@@ -65,8 +85,20 @@ async function loadPosts() {
       return;
     }
 
-    list.forEach((post) => {
-      const card = createPostElement(post);
+    rawList.forEach((post) => {
+      const normalized = {
+        id: post.post_id,
+        title: post.title,
+        authorNickname: post.author_name,
+        likes: post.likes ?? 0,
+        views: post.views ?? 0,
+        createdAt: post.created_at,
+        commentsCount: post.comment_count ?? post.commentsCount ?? 0,
+
+        authorProfileImage: post.author_profile_image ?? null,
+      };
+
+      const card = createPostElement(normalized);
       boardEl.appendChild(card);
     });
   } catch (err) {
@@ -79,12 +111,79 @@ async function loadPosts() {
   }
 }
 
+async function loadMyAvatar() {
+  const avatarBtn = $("#avatarBtn");
+  if (!avatarBtn) return;
+
+  const userId = loadUserId();
+  if (!userId) return;
+
+  try {
+    const res = await AuthAPI.getUser(userId);
+    const user = res?.data ?? res;
+    const profileImage = user?.profileImage;
+
+    if (!profileImage) return;
+
+    avatarBtn.style.backgroundImage = `url(${profileImage})`;
+    avatarBtn.style.backgroundSize = "cover";
+    avatarBtn.style.backgroundPosition = "center";
+    avatarBtn.style.backgroundRepeat = "no-repeat";
+    avatarBtn.style.borderRadius = "50%";
+    avatarBtn.textContent = "";
+  } catch (err) {
+    console.error("내 프로필(아바타) 불러오기 실패:", err);
+  }
+}
+
+function setupAvatarMenu() {
+  const wrap = $("#avatarWrap");
+  const btn = $("#avatarBtn");
+  const menu = $("#avatarMenu");
+  const logoutBtn = $(".menu-logout");
+
+  if (!wrap || !btn || !menu) return;
+
+  function closeMenu() {
+    wrap.classList.remove("open");
+    btn.setAttribute("aria-expanded", "false");
+  }
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const userId = loadUserId();
+    if (!userId) {
+      window.location.href = "./login.html";
+      return;
+    }
+    const isOpen = wrap.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target)) closeMenu();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      if (!confirm("로그아웃 하시겠습니까?")) return;
+      clearAuth();
+      window.location.href = "./login.html";
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const writeBtn = $(".intro .btn.primary");
-  const avatarBtn = $(".site-header .avatar");
   const boardEl = $(".board");
 
   loadPosts();
+  loadMyAvatar();
+  setupAvatarMenu();
 
   if (writeBtn) {
     on(writeBtn, "click", () => {
@@ -95,17 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       window.location.href = "./post-create.html";
-    });
-  }
-
-  if (avatarBtn) {
-    on(avatarBtn, "click", () => {
-      const userId = loadUserId();
-      if (!userId) {
-        window.location.href = "./login.html";
-      } else {
-        window.location.href = "./profile-edit.html";
-      }
     });
   }
 

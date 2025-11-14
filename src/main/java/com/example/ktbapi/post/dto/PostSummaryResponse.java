@@ -9,5 +9,6 @@ public record PostSummaryResponse(
         @JsonProperty("author_name") String authorNickname,
         int likes,
         int views,
-        @JsonProperty("created_at") String createdAt
+        @JsonProperty("created_at") String createdAt,
+        @JsonProperty("author_profile_image") String authorProfileImage
 ) {}

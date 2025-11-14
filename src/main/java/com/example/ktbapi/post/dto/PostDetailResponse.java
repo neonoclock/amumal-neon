@@ -8,6 +8,7 @@ public record PostDetailResponse(
         String title,
         @JsonProperty("author_id") Long authorId,
         @JsonProperty("author_name") String authorNickname,
+        @JsonProperty("author_profile_image") String authorProfileImage,
         String content,
         @JsonProperty("image_url") String imageUrl,
         int likes,

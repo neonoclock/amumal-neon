@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://172.16.24.172:5500")
-
 @RestController
 @RequestMapping("/api/v1/users")
 @Tag(name = "Users", description = "회원 가입/조회/수정/삭제")
@@ -27,31 +26,34 @@ public class UserController {
         this.userRepo = userRepo;
     }
 
-   
     @PostMapping
     public ApiResponse<IdResponse> signup(@Valid @RequestBody SignupRequest req) {
-        User user = new User(req.email, req.password, req.nickname, UserRole.USER);
+        
+        UserRole role = req.userRole != null ? req.userRole : UserRole.USER;
+
+        User user = new User(req.email, req.password, req.nickname, role);
+
+        
+        if (req.profileImage != null && !req.profileImage.isBlank()) {
+            user.setProfileImage(req.profileImage);
+        }
+
         userRepo.save(user);
         return ApiResponse.success(new IdResponse(user.getId()));
     }
 
-
     @PostMapping("/login")
     public ApiResponse<User> login(@Valid @RequestBody LoginRequest req) {
-  
+
         User user = userRepo.findByEmail(req.email)
                 .orElseThrow(() -> new UnauthorizedException("invalid credentials"));
 
-        
         if (!user.getPassword().equals(req.password)) {
             throw new UnauthorizedException("invalid credentials");
         }
 
-
-
         return ApiResponse.success(user);
     }
-
 
     @GetMapping("/{userId}")
     public ApiResponse<User> getUser(@PathVariable Long userId) {
@@ -59,7 +61,6 @@ public class UserController {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         return ApiResponse.success(user);
     }
-
 
     @PatchMapping("/{userId}/profile")
     public ApiResponse<Void> updateProfile(
@@ -78,7 +79,6 @@ public class UserController {
         return ApiResponse.success();
     }
 
-
     @PatchMapping("/{userId}/password")
     public ApiResponse<Void> updatePassword(
             @PathVariable Long userId,
@@ -96,7 +96,6 @@ public class UserController {
 
         return ApiResponse.success();
     }
-
 
     @DeleteMapping("/{userId}")
     public ApiResponse<Void> deleteUser(@PathVariable Long userId) {

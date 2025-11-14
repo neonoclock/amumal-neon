@@ -1,6 +1,7 @@
 import { $, clearFormHelpers, setDisabled, on } from "../core/dom.js";
-import { loadUserId } from "../core/storage.js";
+import { loadUserId, clearAuth } from "../core/storage.js";
 import { PostsAPI } from "../api/posts.js";
+import { UsersAPI } from "../api/users.js";
 
 let imageDataUrl = null;
 
@@ -53,6 +54,79 @@ function readImageFile(file) {
   });
 }
 
+async function loadMyAvatar() {
+  const avatarBtn = $("#avatarBtn");
+  if (!avatarBtn) return;
+
+  const userId = loadUserId();
+  if (!userId) {
+    return;
+  }
+
+  try {
+    const user = await UsersAPI.getUser(userId);
+    const profileImage = user?.profileImage;
+
+    if (!profileImage) return;
+
+    avatarBtn.style.backgroundImage = `url(${profileImage})`;
+    avatarBtn.style.backgroundSize = "cover";
+    avatarBtn.style.backgroundPosition = "center";
+    avatarBtn.style.backgroundRepeat = "no-repeat";
+    avatarBtn.style.borderRadius = "50%";
+    avatarBtn.textContent = "";
+  } catch (err) {
+    console.error("[POST-CREATE] 내 프로필(아바타) 불러오기 실패:", err);
+  }
+}
+
+function setupAvatarMenu() {
+  const wrap = $("#avatarWrap");
+  const btn = $("#avatarBtn");
+  const menu = $("#avatarMenu");
+  const logoutBtn = $(".menu-logout");
+
+  if (!wrap || !btn || !menu) return;
+
+  function closeMenu() {
+    wrap.classList.remove("open");
+    btn.setAttribute("aria-expanded", "false");
+  }
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const userId = loadUserId();
+
+    if (!userId) {
+      window.location.href = "./login.html";
+      return;
+    }
+
+    const isOpen = wrap.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      if (!confirm("로그아웃 하시겠습니까?")) return;
+      clearAuth();
+      window.location.href = "./login.html";
+    });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const userId = loadUserId();
 
@@ -68,20 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.querySelector(".upload input[type='file']");
   const fileHint = document.querySelector(".file-hint");
   const submitBtn = $(".btn.primary");
-  const avatarBtn = $(".site-header .avatar");
+
+  loadMyAvatar();
+  setupAvatarMenu();
 
   showFormError("");
-
-  if (avatarBtn) {
-    on(avatarBtn, "click", () => {
-      const uid = loadUserId();
-      if (!uid) {
-        window.location.href = "./login.html";
-      } else {
-        window.location.href = "./profile-edit.html";
-      }
-    });
-  }
 
   if (fileInput) {
     on(fileInput, "change", async () => {
@@ -146,18 +211,14 @@ document.addEventListener("DOMContentLoaded", () => {
           imageUrl: imageDataUrl,
         });
 
-        const postId = data?.id;
-        if (postId) {
-          alert("게시글이 작성되었습니다.");
+        console.log("[POST-CREATE] created post:", data);
 
-          window.location.href = `./post-detail.html?postId=${postId}`;
-        } else {
-          alert("게시글이 작성되었습니다.");
-          window.location.href = "./board.html";
-        }
+        alert("게시글이 작성되었습니다.");
+
+        window.location.href = "./board.html";
       } catch (err) {
         console.error("게시글 작성 실패:", err);
-        showFormError(err.message || "게시글 작성 중 오류가 발생했습니다.");
+        showFormError(err?.message || "게시글 작성 중 오류가 발생했습니다.");
       } finally {
         setDisabled(submitBtn, false);
       }

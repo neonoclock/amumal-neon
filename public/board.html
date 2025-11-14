@@ -11,7 +11,31 @@
     <header class="site-header">
       <div class="header-inner">
         <h1 class="brand">아무 말 대잔치</h1>
-        <button class="avatar" aria-label="내 프로필">👩🏻‍💻</button>
+
+        <!-- 아바타 + 드롭다운 메뉴 -->
+        <div class="avatar-wrap" id="avatarWrap">
+          <button
+            class="avatar"
+            id="avatarBtn"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-label="내 프로필"
+          >
+            👩🏻‍💻
+          </button>
+          <nav
+            class="avatar-menu"
+            id="avatarMenu"
+            role="menu"
+            aria-label="프로필 메뉴"
+          >
+            <a href="./profile-edit.html" role="menuitem">회원정보수정</a>
+            <a href="./password-edit.html" role="menuitem">비밀번호수정</a>
+            <button type="button" class="menu-logout" role="menuitem">
+              로그아웃
+            </button>
+          </nav>
+        </div>
       </div>
     </header>
 
@@ -26,7 +50,7 @@
 
     <!-- 목록 -->
     <main class="board">
-      <!-- 카드 템플릿 -->
+      <!-- 카드 템플릿 (JS에서 지우고 다시 그림) -->
       <article class="post">
         <div class="post-head">
           <h2 class="post-title">제목 1</h2>
@@ -47,7 +71,6 @@
         </footer>
       </article>
 
-      <!-- 필요 시 반복 렌더링 -->
       <article class="post">
         <div class="post-head">
           <h2 class="post-title">제목 1</h2>
@@ -58,8 +81,8 @@
         </div>
         <div class="post-divider"></div>
         <footer class="post-footer">
-          <span class="author-avatar"></span
-          ><span class="author-name">더미 작성자 1</span>
+          <span class="author-avatar"></span>
+          <span class="author-name">더미 작성자 1</span>
         </footer>
       </article>
     </main>

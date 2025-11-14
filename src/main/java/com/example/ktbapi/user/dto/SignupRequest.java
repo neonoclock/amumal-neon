@@ -26,7 +26,8 @@ public class SignupRequest {
   @Size(max = 30, message = "nickname must be <= 30 chars")
   public String nickname;
 
-  public String profile_image;
+  @Schema(description = "프로필 이미지 (base64 또는 URL)")
+  public String profileImage;
 
   @Schema(description = "사용자 역할 (기본값 USER)", example = "USER")
   public UserRole userRole;

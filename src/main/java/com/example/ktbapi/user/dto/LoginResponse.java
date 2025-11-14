@@ -1,4 +1,4 @@
-package com.example.ktbapi.common.dto;
+package com.example.ktbapi.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

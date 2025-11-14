@@ -1,10 +1,4 @@
-import {
-  $,
-  setHelper,
-  clearFormHelpers,
-  setDisabled,
-  on,
-} from "../core/dom.js";
+import { $, setHelper, clearFormHelpers, setDisabled } from "../core/dom.js";
 import { loadUserId, loadAuth, saveAuth, clearAuth } from "../core/storage.js";
 import { UsersAPI } from "../api/users.js";
 
@@ -21,6 +15,7 @@ async function loadProfile() {
   const emailEl = $(".field .readonly");
   const nickInput = $("#nick");
   const avatarImg = $(".avatar-uploader img");
+  const headerAvatarBtn = $("#avatarBtn");
 
   try {
     const user = await UsersAPI.getUser(userId);
@@ -35,8 +30,19 @@ async function loadProfile() {
     }
 
     if (user.profileImage) {
-      avatarImg.src = user.profileImage;
+      if (avatarImg) {
+        avatarImg.src = user.profileImage;
+      }
       currentProfileImage = user.profileImage;
+
+      if (headerAvatarBtn) {
+        headerAvatarBtn.style.backgroundImage = `url(${user.profileImage})`;
+        headerAvatarBtn.style.backgroundSize = "cover";
+        headerAvatarBtn.style.backgroundPosition = "center";
+        headerAvatarBtn.style.backgroundRepeat = "no-repeat";
+        headerAvatarBtn.style.borderRadius = "50%";
+        headerAvatarBtn.textContent = "";
+      }
     } else {
       currentProfileImage = null;
     }
@@ -61,25 +67,22 @@ function validateForm() {
   return true;
 }
 
-async function handleUpdateProfile(e) {
-  e.preventDefault();
-
+async function updateProfileCore() {
   const userId = loadUserId();
   if (!userId) {
     alert("로그인이 필요합니다.");
     window.location.href = "./login.html";
-    return;
+    return false;
   }
 
-  if (!validateForm()) return;
+  if (!validateForm()) return false;
 
   const nickInput = $("#nick");
-  const submitBtn = $(".btn.primary.block") || $(".btn.primary.pill");
-
   const nickname = nickInput.value.trim();
+  const submitBtn = $(".btn.primary.block");
 
   try {
-    setDisabled(submitBtn, true);
+    if (submitBtn) setDisabled(submitBtn, true);
 
     const result = await UsersAPI.updateProfile(userId, {
       nickname,
@@ -97,18 +100,36 @@ async function handleUpdateProfile(e) {
       });
     }
 
-    alert("프로필이 수정되었습니다.");
+    return true;
   } catch (e) {
     console.error(e);
     alert(e.message || "프로필 수정에 실패했습니다.");
+    return false;
   } finally {
-    setDisabled(submitBtn, false);
+    if (submitBtn) setDisabled(submitBtn, false);
   }
+}
+
+async function handleUpdateProfile(e) {
+  e.preventDefault();
+  const ok = await updateProfileCore();
+  if (ok) {
+    alert("프로필이 수정되었습니다.");
+  }
+}
+
+async function handleComplete(e) {
+  e.preventDefault();
+  const ok = await updateProfileCore();
+  if (!ok) return;
+  alert("프로필이 수정되었습니다.");
+  window.location.href = "./board.html";
 }
 
 function setupAvatarUploader() {
   const fileInput = document.querySelector(".avatar-uploader input[type=file]");
   const avatarImg = document.querySelector(".avatar-uploader img");
+  const headerAvatarBtn = $("#avatarBtn");
 
   if (!fileInput || !avatarImg) return;
 
@@ -124,6 +145,15 @@ function setupAvatarUploader() {
       if (typeof base64 === "string") {
         avatarImg.src = base64;
         currentProfileImage = base64;
+
+        if (headerAvatarBtn) {
+          headerAvatarBtn.style.backgroundImage = `url(${base64})`;
+          headerAvatarBtn.style.backgroundSize = "cover";
+          headerAvatarBtn.style.backgroundPosition = "center";
+          headerAvatarBtn.style.backgroundRepeat = "no-repeat";
+          headerAvatarBtn.style.borderRadius = "50%";
+          headerAvatarBtn.textContent = "";
+        }
       }
     };
     reader.readAsDataURL(file);
@@ -133,7 +163,8 @@ function setupAvatarUploader() {
 function setupAccountButtons() {
   const logoutBtn = document.querySelector(".menu-logout");
   const deleteBtn = document.querySelector(".link.danger");
-  const submitBtn = $(".btn.primary.block") || $(".btn.primary.pill");
+  const updateBtn = $(".btn.primary.block");
+  const completeBtn = $(".btn.primary.pill");
 
   const userId = loadUserId();
 
@@ -167,13 +198,12 @@ function setupAccountButtons() {
     });
   }
 
-  if (submitBtn) {
-    submitBtn.addEventListener("click", handleUpdateProfile);
+  if (updateBtn) {
+    updateBtn.addEventListener("click", handleUpdateProfile);
   }
 
-  const form = document.querySelector(".form");
-  if (form) {
-    form.addEventListener("submit", handleUpdateProfile);
+  if (completeBtn) {
+    completeBtn.addEventListener("click", handleComplete);
   }
 }
 

@@ -14,7 +14,31 @@
           >‹</a
         >
         <h1 class="brand">아무 말 대잔치</h1>
-        <button class="avatar" aria-label="프로필">👤</button>
+
+        <!-- 🔥 아바타 + 드롭다운 메뉴 (board.html과 동일한 구조) -->
+        <div class="avatar-wrap" id="avatarWrap">
+          <button
+            class="avatar"
+            id="avatarBtn"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-label="내 프로필"
+          >
+            👩🏻‍💻
+          </button>
+          <nav
+            class="avatar-menu"
+            id="avatarMenu"
+            role="menu"
+            aria-label="프로필 메뉴"
+          >
+            <a href="./profile-edit.html" role="menuitem">회원정보수정</a>
+            <a href="./password-edit.html" role="menuitem">비밀번호수정</a>
+            <button type="button" class="menu-logout" role="menuitem">
+              로그아웃
+            </button>
+          </nav>
+        </div>
       </div>
     </header>
 
@@ -31,8 +55,10 @@
               src="./assets/img/profile-sample.png"
               alt="작성자 프로필"
             />
-            <span class="name">더미 작성자 1</span>
-            <time class="date">2021-01-01 00:00:00</time>
+            <div class="author-text">
+              <span class="name">더미 작성자 1</span>
+              <time class="date">2021-01-01 00:00:00</time>
+            </div>
           </div>
 
           <div class="actions">
@@ -46,21 +72,7 @@
 
         <!-- 본문 텍스트 -->
         <div class="content">
-          <p>
-            무엇을 얘기할까요? 아무거나라도, 삶은 한낮 늘어놓고 싶잖습니까.
-            우리는 매일 새로운 경험을 축적하며 살아갑니다. 언젠가 어른이 되면
-            하고 싶었던 이야기들, 그것들이 우리의 더 긴 하루를 지탱해 줍니다.
-          </p>
-          <p>
-            또한 우리는 주변 사람들의 얼굴에서 저마다의 서사를 목격하며 저마다의
-            가치를 발견합니다. 그래서 우리의 글은 조금씩 모여 의미가 됩니다.
-            자연도 버티고요.
-          </p>
-          <p>
-            아직까지요, 지식을 향한 열망은 종종 말로 흘러넘칩니다. 우리는 놀라운
-            것들의 바다에서 헤엄치고 있잖아요. 이것이 글의 힘이며 이 페이지에
-            남길 발자국입니다.
-          </p>
+          <p>본문 내용</p>
         </div>
 
         <!-- 하단 통계 3칸 -->
@@ -92,62 +104,10 @@
 
       <!-- 댓글 리스트 -->
       <section class="comments">
-        <!-- 1 -->
-        <article class="comment">
-          <div class="c-left"><span class="dot"></span></div>
-          <div class="c-body">
-            <div class="c-head">
-              <div class="who">
-                <span class="name">더미 작성자 1</span>
-                <time class="date">2021-01-01 00:00:00</time>
-              </div>
-              <div class="actions">
-                <button class="chip">수정</button>
-                <button class="chip">삭제</button>
-              </div>
-            </div>
-            <p class="c-text">댓글 내용</p>
-          </div>
-        </article>
-
-        <!-- 2 -->
-        <article class="comment">
-          <div class="c-left"><span class="dot"></span></div>
-          <div class="c-body">
-            <div class="c-head">
-              <div class="who">
-                <span class="name">더미 작성자 1</span>
-                <time class="date">2021-01-01 00:00:00</time>
-              </div>
-              <div class="actions">
-                <button class="chip">수정</button>
-                <button class="chip">삭제</button>
-              </div>
-            </div>
-            <p class="c-text">댓글 내용</p>
-          </div>
-        </article>
-
-        <!-- 3 -->
-        <article class="comment">
-          <div class="c-left"><span class="dot"></span></div>
-          <div class="c-body">
-            <div class="c-head">
-              <div class="who">
-                <span class="name">더미 작성자 1</span>
-                <time class="date">2021-01-01 00:00:00</time>
-              </div>
-              <div class="actions">
-                <button class="chip">수정</button>
-                <button class="chip">삭제</button>
-              </div>
-            </div>
-            <p class="c-text">댓글 내용</p>
-          </div>
-        </article>
+        <!-- JS에서 렌더링 -->
       </section>
     </main>
+
+    <script type="module" src="./assets/js/pages/post-detail.js"></script>
   </body>
 </html>
-
-<script type="module" src="./assets/js/pages/post-detail.js"></script>
