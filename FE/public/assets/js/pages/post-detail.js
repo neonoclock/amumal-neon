@@ -93,21 +93,22 @@ function renderPostHeader(post) {
   }
 
   const authorName =
-    post.author?.nickname || post.authorName || post.author_name || "익명";
+    post.author_name || post.authorName || post.author?.nickname || "익명";
+
   if (dom.authorNameEl) {
     dom.authorNameEl.textContent = authorName;
   }
 
-  const createdAt = post.createdAt || post.created_at;
+  const createdAt = post.created_at || post.createdAt;
   if (dom.authorDateEl) {
     dom.authorDateEl.textContent = formatDate(createdAt);
   }
 
   const profileImg =
-    post.authorProfileImage ||
     post.author_profile_image ||
-    post.author?.profileImage ||
+    post.authorProfileImage ||
     post.author?.profile_image ||
+    post.author?.profileImage ||
     "./assets/img/profile-sample.png";
 
   if (dom.authorAvatarEl) {
@@ -119,7 +120,8 @@ function renderPostMedia(post) {
   if (!dom.mediaEl) return;
 
   dom.mediaEl.innerHTML = "";
-  const imgUrl = post.imageUrl || post.image_url;
+
+  const imgUrl = post.image_url || post.imageUrl;
 
   if (imgUrl) {
     const img = document.createElement("img");
@@ -141,13 +143,13 @@ function renderPostStats(post) {
   const likeCount = post.likes ?? 0;
   const viewCount = post.views ?? 0;
   const commentsCount =
-    post.commentsCount ?? post.commentCount ?? state.comments.length;
+    post.comments_count ?? post.commentCount ?? state.comments.length;
 
   if (dom.likeCountEl) dom.likeCountEl.textContent = likeCount;
   if (dom.viewsCountEl) dom.viewsCountEl.textContent = viewCount;
   if (dom.commentsCountEl) dom.commentsCountEl.textContent = commentsCount;
 
-  const liked = post.likedByViewer ?? post.likedByMe ?? post.liked ?? false;
+  const liked = post.liked ?? post.likedByViewer ?? post.likedByMe ?? false;
 
   if (liked) {
     dom.likeStatBtn?.classList.add("is-liked");
@@ -162,11 +164,11 @@ function renderPostActions(post) {
   if (!dom.postActionsEl) return;
 
   const me = state.me;
-  const authorId = post.author?.id ?? post.authorId ?? post.author_id;
+  const authorId = post.author_id || post.authorId || post.author?.id;
+
   const isOwner = me && authorId && Number(me) === Number(authorId);
 
   dom.postActionsEl.innerHTML = "";
-
   if (!isOwner) return;
 
   const editBtn = document.createElement("button");
@@ -200,7 +202,6 @@ function renderComments() {
   const me = state.me;
 
   if (!dom.commentsContainer) return;
-
   dom.commentsContainer.innerHTML = "";
 
   if (list.length === 0) {
@@ -212,13 +213,17 @@ function renderComments() {
   }
 
   list.forEach((c) => {
-    const commentId = c.id ?? c.commentId ?? c.comment_id;
+    const commentId = c.comment_id ?? c.id ?? c.commentId;
 
     const content = c.content ?? "";
-    const createdAt = c.createdAt || c.created_at;
+
+    const createdAt = c.created_at || c.createdAt;
+
     const authorName =
-      c.author?.nickname || c.authorName || c.author_name || "익명";
-    const authorId = c.author?.id ?? c.authorId ?? c.author_id;
+      c.author_name || c.authorName || c.author?.nickname || "익명";
+
+    const authorId = c.author_id || c.authorId || c.author?.id;
+
     const isMine = me && authorId && Number(me) === Number(authorId);
 
     const article = document.createElement("article");
@@ -328,11 +333,13 @@ async function handleToggleLike() {
     return;
   }
   if (state.isLiking) return;
+
   state.isLiking = true;
   setDisabled(dom.likeStatBtn, true);
 
   const post = state.post;
   const liked = !!post.liked;
+
   try {
     if (liked) {
       await PostsAPI.unlike(state.postId, { userId: state.me });
@@ -414,8 +421,8 @@ function handleEditComment(commentEl, commentId) {
   if (!textEl || !actionsEl) return;
 
   const original = textEl.textContent || "";
-
   if (commentEl.classList.contains("editing")) return;
+
   commentEl.classList.add("editing");
 
   const textarea = document.createElement("textarea");
@@ -462,21 +469,22 @@ function handleEditComment(commentEl, commentId) {
     textarea.replaceWith(p);
 
     actionsEl.innerHTML = "";
+
     const editBtn = document.createElement("button");
     editBtn.className = "chip c-edit";
     editBtn.textContent = "수정";
+
     const delBtn = document.createElement("button");
     delBtn.className = "chip c-delete";
     delBtn.textContent = "삭제";
+
     actionsEl.appendChild(editBtn);
     actionsEl.appendChild(delBtn);
 
-    editBtn.addEventListener("click", () => {
-      handleEditComment(commentEl, commentId);
-    });
-    delBtn.addEventListener("click", () => {
-      handleDeleteComment(commentId);
-    });
+    editBtn.addEventListener("click", () =>
+      handleEditComment(commentEl, commentId)
+    );
+    delBtn.addEventListener("click", () => handleDeleteComment(commentId));
 
     commentEl.classList.remove("editing");
   });

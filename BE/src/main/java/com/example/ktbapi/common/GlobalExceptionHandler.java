@@ -96,7 +96,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiResponse<Void>> noResource(NoResourceFoundException ex, HttpServletRequest request) {
-        String path = request.getRequestURI(); // ex.getResourcePath()는 null일 때가 있어서 request에서 확정
+        String path = request.getRequestURI(); 
         if (path != null && (path.contains("/swagger-ui") || path.contains("/v3/api-docs")
                 || path.contains("/webjars") || path.contains("/favicon"))) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

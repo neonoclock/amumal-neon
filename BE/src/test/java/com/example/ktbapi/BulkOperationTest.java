@@ -105,7 +105,7 @@ class BulkOperationTest {
         em.persist(u);
         for (int i = 0; i < 3; i++) {
             Post p = new Post(u, "t" + i, "c", null);
-            for (int v = 0; v < (10 * (i + 1)); v++) p.increaseViews(); // 10,20,30
+            for (int v = 0; v < (10 * (i + 1)); v++) p.increaseViews(); 
             em.persist(p);
         }
         em.flush();

@@ -7,6 +7,7 @@ import com.example.ktbapi.user.dto.LoginRequest;
 import com.example.ktbapi.user.dto.SignupRequest;
 import com.example.ktbapi.user.dto.ProfileUpdateRequest;
 import com.example.ktbapi.user.dto.PasswordUpdateRequest;
+import com.example.ktbapi.user.dto.UserResponse;
 import com.example.ktbapi.user.model.User;
 import com.example.ktbapi.user.model.UserRole;
 import com.example.ktbapi.user.repo.UserJpaRepository;
@@ -28,12 +29,11 @@ public class UserController {
 
     @PostMapping
     public ApiResponse<IdResponse> signup(@Valid @RequestBody SignupRequest req) {
-        
+
         UserRole role = req.userRole != null ? req.userRole : UserRole.USER;
 
         User user = new User(req.email, req.password, req.nickname, role);
 
-        
         if (req.profileImage != null && !req.profileImage.isBlank()) {
             user.setProfileImage(req.profileImage);
         }
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ApiResponse<User> login(@Valid @RequestBody LoginRequest req) {
+    public ApiResponse<UserResponse> login(@Valid @RequestBody LoginRequest req) {
 
         User user = userRepo.findByEmail(req.email)
                 .orElseThrow(() -> new UnauthorizedException("invalid credentials"));
@@ -52,14 +52,16 @@ public class UserController {
             throw new UnauthorizedException("invalid credentials");
         }
 
-        return ApiResponse.success(user);
+        return ApiResponse.success(UserResponse.from(user));
     }
 
     @GetMapping("/{userId}")
-    public ApiResponse<User> getUser(@PathVariable Long userId) {
+    public ApiResponse<UserResponse> getUser(@PathVariable Long userId) {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        return ApiResponse.success(user);
+
+        
+        return ApiResponse.success(UserResponse.from(user));
     }
 
     @PatchMapping("/{userId}/profile")

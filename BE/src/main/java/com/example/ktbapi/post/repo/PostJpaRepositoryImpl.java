@@ -111,7 +111,7 @@ public class PostJpaRepositoryImpl implements PostQueryRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    // === Dynamic predicates ===
+
 
     private BooleanExpression titleOrContentContains(String keyword) {
         if (keyword == null || keyword.isBlank()) return null;
