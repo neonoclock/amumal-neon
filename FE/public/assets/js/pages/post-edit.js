@@ -5,9 +5,9 @@ import {
   clearFormHelpers,
   setDisabled,
 } from "../core/dom.js";
-import { loadUserId, clearAuth } from "../core/storage.js";
+import { loadUserId } from "../core/storage.js";
 import { PostsAPI } from "../api/posts.js";
-import { AuthAPI } from "../api/auth.js";
+import { loadMyAvatar, setupAvatarMenu } from "../common/ui.js";
 
 let currentImageDataUrl = null;
 
@@ -46,72 +46,6 @@ function validateForm(titleEl, contentEl, formEl) {
   }
 
   return valid;
-}
-
-async function loadMyAvatar() {
-  const avatarBtn = $("#avatarBtn");
-  if (!avatarBtn) return;
-
-  const userId = loadUserId();
-  if (!userId) return;
-
-  try {
-    const res = await AuthAPI.getUser(userId);
-    const user = res?.data ?? res;
-    const profileImage = user?.profileImage;
-
-    if (!profileImage) return;
-
-    avatarBtn.style.backgroundImage = `url(${profileImage})`;
-    avatarBtn.style.backgroundSize = "cover";
-    avatarBtn.style.backgroundPosition = "center";
-    avatarBtn.style.backgroundRepeat = "no-repeat";
-    avatarBtn.style.borderRadius = "50%";
-    avatarBtn.textContent = "";
-  } catch (err) {
-    console.error("[POST-EDIT] 내 프로필(아바타) 불러오기 실패:", err);
-  }
-}
-
-function setupAvatarMenu() {
-  const wrap = $("#avatarWrap");
-  const btn = $("#avatarBtn");
-  const menu = $("#avatarMenu");
-  const logoutBtn = $(".menu-logout");
-
-  if (!wrap || !btn || !menu) return;
-
-  function closeMenu() {
-    wrap.classList.remove("open");
-    btn.setAttribute("aria-expanded", "false");
-  }
-
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const userId = loadUserId();
-    if (!userId) {
-      window.location.href = "./login.html";
-      return;
-    }
-    const isOpen = wrap.classList.toggle("open");
-    btn.setAttribute("aria-expanded", String(isOpen));
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!wrap.contains(e.target)) closeMenu();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeMenu();
-  });
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      if (!confirm("로그아웃 하시겠습니까?")) return;
-      clearAuth();
-      window.location.href = "./login.html";
-    });
-  }
 }
 
 function setupFileInput(fileInput, fileNameEl) {
@@ -244,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const userId = ensureLogin();
   if (!userId) return;
 
-  loadMyAvatar();
+  loadMyAvatar("[POST-EDIT]");
   setupAvatarMenu();
 
   const fileInput = document.querySelector(".upload input[type=file]");

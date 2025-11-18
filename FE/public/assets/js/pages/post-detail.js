@@ -1,8 +1,8 @@
 import { $, $$, on, setDisabled } from "../core/dom.js";
-import { loadUserId, clearAuth } from "../core/storage.js";
+import { loadUserId } from "../core/storage.js";
 import { PostsAPI } from "../api/posts.js";
 import { CommentsAPI } from "../api/comments.js";
-import { AuthAPI } from "../api/auth.js";
+import { loadMyAvatar, setupAvatarMenu } from "../common/ui.js";
 
 const state = {
   postId: null,
@@ -85,72 +85,6 @@ function cacheDOM() {
   dom.commentSubmitBtn = $(".comment-write .btn.primary");
 
   dom.commentsContainer = $(".comments");
-}
-
-async function loadMyAvatar() {
-  const avatarBtn = $("#avatarBtn");
-  if (!avatarBtn) return;
-
-  const userId = loadUserId();
-  if (!userId) return;
-
-  try {
-    const res = await AuthAPI.getUser(userId);
-    const user = res?.data ?? res;
-    const profileImage = user?.profileImage;
-
-    if (!profileImage) return;
-
-    avatarBtn.style.backgroundImage = `url(${profileImage})`;
-    avatarBtn.style.backgroundSize = "cover";
-    avatarBtn.style.backgroundPosition = "center";
-    avatarBtn.style.backgroundRepeat = "no-repeat";
-    avatarBtn.style.borderRadius = "50%";
-    avatarBtn.textContent = "";
-  } catch (err) {
-    console.error("[POST-DETAIL] 내 프로필(아바타) 불러오기 실패:", err);
-  }
-}
-
-function setupAvatarMenu() {
-  const wrap = $("#avatarWrap");
-  const btn = $("#avatarBtn");
-  const menu = $("#avatarMenu");
-  const logoutBtn = $(".menu-logout");
-
-  if (!wrap || !btn || !menu) return;
-
-  function closeMenu() {
-    wrap.classList.remove("open");
-    btn.setAttribute("aria-expanded", "false");
-  }
-
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const userId = loadUserId();
-    if (!userId) {
-      window.location.href = "./login.html";
-      return;
-    }
-    const isOpen = wrap.classList.toggle("open");
-    btn.setAttribute("aria-expanded", String(isOpen));
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!wrap.contains(e.target)) closeMenu();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeMenu();
-  });
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-      if (!confirm("로그아웃 하시겠습니까?")) return;
-      clearAuth();
-      window.location.href = "./login.html";
-    });
-  }
 }
 
 function renderPostHeader(post) {
@@ -260,6 +194,8 @@ function renderPost() {
   renderPostStats(post);
   renderPostActions(post);
 }
+
+/* --- 댓글 렌더링 --- */
 
 function renderComments() {
   const list = state.comments || [];
@@ -572,6 +508,8 @@ async function loadComments() {
   }
 }
 
+/* --- 초기화 --- */
+
 document.addEventListener("DOMContentLoaded", async () => {
   state.postId = getPostIdFromURL();
   state.me = loadUserId();
@@ -583,7 +521,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   cacheDOM();
-  await loadMyAvatar();
+  await loadMyAvatar("[POST-DETAIL]");
   setupAvatarMenu();
 
   if (dom.likeStatBtn) {
