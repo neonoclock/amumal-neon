@@ -79,10 +79,9 @@ function setupAvatarMenu() {
 document.addEventListener("DOMContentLoaded", () => {
   const form = $(".form");
 
-  // ✅ 각 필드 DOM
-  const currentPwEl = $("#currentPw"); // 현재 비밀번호
-  const pwEl = $("#pw"); // 새 비밀번호
-  const pw2El = $("#pw2"); // 새 비밀번호 확인
+  const currentPwEl = $("#currentPw");
+  const pwEl = $("#pw");
+  const pw2El = $("#pw2");
   const submitBtn = $(".btn.primary");
 
   const userId = loadUserId();

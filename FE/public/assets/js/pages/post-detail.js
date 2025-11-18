@@ -153,10 +153,7 @@ function setupAvatarMenu() {
   }
 }
 
-function renderPost() {
-  const post = state.post;
-  if (!post) return;
-
+function renderPostHeader(post) {
   if (dom.titleEl) {
     dom.titleEl.textContent = post.title ?? "(제목 없음)";
   }
@@ -182,9 +179,14 @@ function renderPost() {
   if (dom.authorAvatarEl) {
     dom.authorAvatarEl.src = profileImg;
   }
+}
+
+function renderPostMedia(post) {
+  if (!dom.mediaEl) return;
 
   dom.mediaEl.innerHTML = "";
   const imgUrl = post.imageUrl || post.image_url;
+
   if (imgUrl) {
     const img = document.createElement("img");
     img.src = imgUrl;
@@ -195,9 +197,13 @@ function renderPost() {
   } else {
     dom.mediaEl.style.display = "none";
   }
+}
 
+function renderPostBody(post) {
   renderContent(dom.contentEl, post.content);
+}
 
+function renderPostStats(post) {
   const likeCount = post.likes ?? 0;
   const viewCount = post.views ?? 0;
   const commentsCount =
@@ -214,30 +220,45 @@ function renderPost() {
   } else {
     dom.likeStatBtn?.classList.remove("is-liked");
   }
+
   state.post.liked = liked;
+}
+
+function renderPostActions(post) {
+  if (!dom.postActionsEl) return;
 
   const me = state.me;
   const authorId = post.author?.id ?? post.authorId ?? post.author_id;
   const isOwner = me && authorId && Number(me) === Number(authorId);
 
-  if (dom.postActionsEl) {
-    dom.postActionsEl.innerHTML = "";
-    if (isOwner) {
-      const editBtn = document.createElement("button");
-      editBtn.className = "chip";
-      editBtn.textContent = "수정";
+  dom.postActionsEl.innerHTML = "";
 
-      const deleteBtn = document.createElement("button");
-      deleteBtn.className = "chip";
-      deleteBtn.textContent = "삭제";
+  if (!isOwner) return;
 
-      dom.postActionsEl.appendChild(editBtn);
-      dom.postActionsEl.appendChild(deleteBtn);
+  const editBtn = document.createElement("button");
+  editBtn.className = "chip";
+  editBtn.textContent = "수정";
 
-      on(editBtn, "click", handleEditPost);
-      on(deleteBtn, "click", handleDeletePost);
-    }
-  }
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "chip";
+  deleteBtn.textContent = "삭제";
+
+  dom.postActionsEl.appendChild(editBtn);
+  dom.postActionsEl.appendChild(deleteBtn);
+
+  on(editBtn, "click", handleEditPost);
+  on(deleteBtn, "click", handleDeletePost);
+}
+
+function renderPost() {
+  const post = state.post;
+  if (!post) return;
+
+  renderPostHeader(post);
+  renderPostMedia(post);
+  renderPostBody(post);
+  renderPostStats(post);
+  renderPostActions(post);
 }
 
 function renderComments() {
