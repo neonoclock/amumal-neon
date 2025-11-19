@@ -72,6 +72,16 @@ body {
   cursor: pointer;
   font-size: 18px;
   color: #b0586f;
+  overflow: hidden;
+}
+
+.avatar.has-avatar {
+  background-image: var(--avatar-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
 }
 
 .avatar-menu {
@@ -178,9 +188,7 @@ body {
 
 .post {
   position: relative;
-
   background: #fdf7f6;
-
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 18px 24px 14px 22px;
@@ -259,11 +267,26 @@ body {
   border-radius: 50%;
   background: linear-gradient(145deg, #feeef1, #f6dce2);
   border: 1px solid #e6d0d4;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.author-avatar.has-avatar {
+  background-image: var(--avatar-url);
+  border: none;
 }
 
 .author-name {
   font-size: 13px;
   color: #4b3036;
+}
+
+.empty {
+  margin: 40px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -50,11 +50,8 @@ function createPostElement(post) {
 
   const avatarEl = article.querySelector(".author-avatar");
   if (avatarEl && authorProfileImage) {
-    avatarEl.style.backgroundImage = `url(${authorProfileImage})`;
-    avatarEl.style.backgroundSize = "cover";
-    avatarEl.style.backgroundPosition = "center";
-    avatarEl.style.backgroundRepeat = "no-repeat";
-    avatarEl.style.border = "none";
+    avatarEl.style.setProperty("--avatar-url", `url(${authorProfileImage})`);
+    avatarEl.classList.add("has-avatar");
   }
 
   return article;
@@ -115,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const boardEl = $(".board");
 
   loadPosts();
+
   loadMyAvatar("[BOARD]");
   setupAvatarMenu();
 

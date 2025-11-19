@@ -4,13 +4,6 @@ import { loadUserId } from "../core/storage.js";
 import { loadMyAvatar, setupAvatarMenu } from "../common/ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = $(".form");
-
-  const currentPwEl = $("#currentPw");
-  const pwEl = $("#pw");
-  const pw2El = $("#pw2");
-  const submitBtn = $(".btn.primary");
-
   const userId = loadUserId();
   if (!userId) {
     alert("로그인이 필요합니다.");
@@ -20,6 +13,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadMyAvatar("[PASSWORD]");
   setupAvatarMenu();
+
+  const form = $(".form");
+  if (!form) {
+    console.warn("[PASSWORD] .form 요소를 찾지 못했습니다.");
+    return;
+  }
+
+  const currentPwEl = $("#currentPw");
+  const pwEl = $("#pw");
+  const pw2El = $("#pw2");
+  const submitBtn = $(".btn.primary");
 
   function validate() {
     clearFormHelpers(form);
@@ -65,7 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const newPassword = pwEl.value.trim();
     const newPasswordCheck = pw2El.value.trim();
 
-    setDisabled(submitBtn, true);
+    if (submitBtn) {
+      setDisabled(submitBtn, true);
+    }
 
     try {
       await PATCH(`/api/v1/users/${userId}/password`, {
@@ -80,7 +86,9 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("비밀번호 변경 실패:", err);
       alert(err.message || "비밀번호 변경 실패");
     } finally {
-      setDisabled(submitBtn, false);
+      if (submitBtn) {
+        setDisabled(submitBtn, false);
+      }
     }
   });
 });

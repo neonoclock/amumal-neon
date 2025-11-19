@@ -77,7 +77,18 @@ body {
   cursor: pointer;
   font-size: 18px;
   color: #b0586f;
+  overflow: hidden;
 }
+
+.avatar.has-avatar {
+  background-image: var(--avatar-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
+}
+
 .avatar-menu {
   position: absolute;
   right: 0;

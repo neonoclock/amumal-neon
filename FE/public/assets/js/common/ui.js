@@ -7,23 +7,48 @@ export async function loadMyAvatar(logPrefix = "") {
   if (!avatarBtn) return;
 
   const userId = loadUserId();
-  if (!userId) return;
+
+  if (!userId) {
+    avatarBtn.classList.remove("has-avatar");
+    avatarBtn.style.removeProperty("--avatar-url");
+    if (!avatarBtn.textContent) {
+      avatarBtn.textContent = "👩🏻‍💻";
+    }
+    return;
+  }
 
   try {
     const user = await UsersAPI.getUser(userId);
-    const profileImage = user?.profileImage;
 
-    if (!profileImage) return;
+    const prefix = logPrefix ? ` ${logPrefix}` : "";
+    console.log(`[AVATAR${prefix}] normalized user:`, user);
 
-    avatarBtn.style.backgroundImage = `url(${profileImage})`;
-    avatarBtn.style.backgroundSize = "cover";
-    avatarBtn.style.backgroundPosition = "center";
-    avatarBtn.style.backgroundRepeat = "no-repeat";
-    avatarBtn.style.borderRadius = "50%";
+    const profileImage = user.profileImage;
+
+    if (!profileImage) {
+      avatarBtn.classList.remove("has-avatar");
+      avatarBtn.style.removeProperty("--avatar-url");
+      if (!avatarBtn.textContent) {
+        avatarBtn.textContent = "👩🏻‍💻";
+      }
+      console.log(`[AVATAR${prefix}] profileImage 없음, 기본 아바타 사용`);
+      return;
+    }
+
+    avatarBtn.style.setProperty("--avatar-url", `url(${profileImage})`);
+    avatarBtn.classList.add("has-avatar");
     avatarBtn.textContent = "";
+
+    console.log(`[AVATAR${prefix}] 프로필 이미지 적용 완료:`, profileImage);
   } catch (err) {
     const prefix = logPrefix ? ` ${logPrefix}` : "";
     console.error(`[AVATAR${prefix}] 내 프로필(아바타) 불러오기 실패:`, err);
+
+    avatarBtn.classList.remove("has-avatar");
+    avatarBtn.style.removeProperty("--avatar-url");
+    if (!avatarBtn.textContent) {
+      avatarBtn.textContent = "👩🏻‍💻";
+    }
   }
 }
 
