@@ -56,8 +56,10 @@ function setupFileInput(fileInput, fileNameEl) {
     console.log("[EVT] post image 선택됨", file);
 
     if (!file) {
-      fileNameEl.textContent = "선택된 파일 없음";
       currentImageDataUrl = null;
+      if (fileNameEl) {
+        fileNameEl.textContent = "선택된 파일 없음";
+      }
       return;
     }
 
@@ -66,7 +68,9 @@ function setupFileInput(fileInput, fileNameEl) {
       const result = e.target?.result;
       if (typeof result === "string") {
         currentImageDataUrl = result;
-        fileNameEl.textContent = file.name || "선택된 이미지";
+        if (fileNameEl) {
+          fileNameEl.textContent = file.name || "선택된 이미지";
+        }
         console.log(
           "[EVT] post image base64 length:",
           currentImageDataUrl.length
@@ -83,8 +87,13 @@ async function loadPostDetail(postId, userId) {
   const fileNameEl = document.querySelector(".upload .file-name");
   const submitBtn = $(".btn.primary");
 
+  if (!titleEl || !contentEl) {
+    console.warn("[POST-EDIT] title 또는 content 요소를 찾지 못했습니다.");
+    return;
+  }
+
   try {
-    setDisabled(submitBtn, true);
+    if (submitBtn) setDisabled(submitBtn, true);
 
     console.log("[REQ] 게시글 상세 조회:", postId);
     const detail = await PostsAPI.getDetail(postId, { viewerId: userId });
@@ -95,17 +104,19 @@ async function loadPostDetail(postId, userId) {
 
     currentImageDataUrl = detail.imageUrl ?? detail.image_url ?? null;
 
-    if (currentImageDataUrl) {
-      fileNameEl.textContent = "기존 이미지가 등록되어 있습니다.";
-    } else {
-      fileNameEl.textContent = "선택된 파일 없음";
+    if (fileNameEl) {
+      if (currentImageDataUrl) {
+        fileNameEl.textContent = "기존 이미지가 등록되어 있습니다.";
+      } else {
+        fileNameEl.textContent = "선택된 파일 없음";
+      }
     }
   } catch (err) {
     console.error("게시글 상세 불러오기 실패:", err);
     alert(err.message || "게시글 정보를 불러오지 못했습니다.");
     window.location.href = "./board.html";
   } finally {
-    setDisabled(submitBtn, false);
+    if (submitBtn) setDisabled(submitBtn, false);
   }
 }
 
@@ -116,6 +127,11 @@ async function handleSubmit(e) {
   const titleEl = $("#title");
   const contentEl = $("#content");
   const submitBtn = $(".btn.primary");
+
+  if (!formEl || !titleEl || !contentEl) {
+    console.warn("[POST-EDIT] form/title/content 요소를 찾지 못했습니다.");
+    return;
+  }
 
   const postId = getPostIdFromQuery();
   if (!postId) {
@@ -136,7 +152,7 @@ async function handleSubmit(e) {
   const imageUrl = currentImageDataUrl;
 
   try {
-    setDisabled(submitBtn, true);
+    if (submitBtn) setDisabled(submitBtn, true);
 
     console.log("[REQ] 게시글 수정 요청:", {
       postId,
@@ -161,7 +177,7 @@ async function handleSubmit(e) {
     console.error("게시글 수정 실패:", err);
     alert(err.message || "게시글 수정에 실패했습니다.");
   } finally {
-    setDisabled(submitBtn, false);
+    if (submitBtn) setDisabled(submitBtn, false);
   }
 }
 
@@ -188,5 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadPostDetail(postId, userId);
 
   const formEl = $(".edit-form");
-  on(formEl, "submit", handleSubmit);
+  if (formEl) {
+    on(formEl, "submit", handleSubmit);
+  }
 });
