@@ -84,6 +84,16 @@ body {
   cursor: pointer;
   font-size: 18px;
   color: #b0586f;
+  overflow: hidden;
+}
+
+.avatar.has-avatar {
+  background-image: var(--avatar-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
 }
 
 .menu {
@@ -200,6 +210,10 @@ body {
   color: var(--muted);
 }
 
+.helper.hidden {
+  display: none;
+}
+
 .helper.error {
   color: var(--error);
 }
@@ -311,6 +325,7 @@ body {
   font-weight: 700;
   cursor: pointer;
 }
+
 .brand a {
   color: inherit;
   text-decoration: none;

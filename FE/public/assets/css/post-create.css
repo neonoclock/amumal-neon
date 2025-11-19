@@ -64,6 +64,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
+
 .avatar {
   width: 36px;
   height: 36px;
@@ -77,7 +78,18 @@ body {
   cursor: pointer;
   font-size: 18px;
   color: #b0586f;
+  overflow: hidden;
 }
+
+.avatar.has-avatar {
+  background-image: var(--avatar-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  color: transparent;
+}
+
 .avatar-menu {
   position: absolute;
   right: 0;
@@ -208,6 +220,10 @@ textarea:focus {
   margin: 4px 0 0;
   font-size: 12px;
   color: var(--muted);
+  display: none;
+}
+.helper.visible {
+  display: block;
 }
 .helper.error {
   color: var(--error);
@@ -264,6 +280,7 @@ textarea:focus {
   text-decoration: none;
   display: inline-block;
 }
+
 .btn {
   width: 60%;
   max-width: 760px;
@@ -334,6 +351,20 @@ textarea:focus {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
   }
   .file-btn:hover {
+    background: #35252a;
+  }
+
+  .avatar-menu {
+    background: #231d1d;
+    border-color: #4a3b3e;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8);
+  }
+  .avatar-menu a,
+  .avatar-menu button {
+    color: #f3e9e8;
+  }
+  .avatar-menu a:hover,
+  .avatar-menu button:hover {
     background: #35252a;
   }
 }

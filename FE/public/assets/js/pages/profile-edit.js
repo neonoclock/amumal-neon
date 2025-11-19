@@ -36,11 +36,11 @@ async function loadProfile() {
       currentProfileImage = user.profileImage;
 
       if (headerAvatarBtn) {
-        headerAvatarBtn.style.backgroundImage = `url(${user.profileImage})`;
-        headerAvatarBtn.style.backgroundSize = "cover";
-        headerAvatarBtn.style.backgroundPosition = "center";
-        headerAvatarBtn.style.backgroundRepeat = "no-repeat";
-        headerAvatarBtn.style.borderRadius = "50%";
+        headerAvatarBtn.style.setProperty(
+          "--avatar-url",
+          `url(${user.profileImage})`
+        );
+        headerAvatarBtn.classList.add("has-avatar");
         headerAvatarBtn.textContent = "";
       }
     } else {
@@ -147,11 +147,8 @@ function setupAvatarUploader() {
         currentProfileImage = base64;
 
         if (headerAvatarBtn) {
-          headerAvatarBtn.style.backgroundImage = `url(${base64})`;
-          headerAvatarBtn.style.backgroundSize = "cover";
-          headerAvatarBtn.style.backgroundPosition = "center";
-          headerAvatarBtn.style.backgroundRepeat = "no-repeat";
-          headerAvatarBtn.style.borderRadius = "50%";
+          headerAvatarBtn.style.setProperty("--avatar-url", `url(${base64})`);
+          headerAvatarBtn.classList.add("has-avatar");
           headerAvatarBtn.textContent = "";
         }
       }
@@ -209,10 +206,11 @@ function setupAccountButtons() {
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("[PROFILE] profile-edit page init");
+
   const avatarHelper = document.querySelector(".section.profile .helper");
   if (avatarHelper) {
     avatarHelper.textContent = "";
-    avatarHelper.style.display = "none";
+    avatarHelper.classList.add("hidden");
   }
 
   setupAvatarUploader();

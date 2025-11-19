@@ -14,14 +14,12 @@ function showFormError(msg = "") {
   if (!helper) return;
 
   if (!msg) {
-    helper.style.display = "none";
-    helper.classList.remove("error");
+    helper.classList.remove("error", "visible");
     helper.innerHTML = `<span class="star">*</span> `;
     return;
   }
 
-  helper.style.display = "block";
-  helper.classList.add("error");
+  helper.classList.add("error", "visible");
   helper.innerHTML = `<span class="star">*</span> ${msg}`;
 }
 
@@ -141,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("[POST-CREATE] created post:", data);
 
         alert("게시글이 작성되었습니다.");
-
         window.location.href = "./board.html";
       } catch (err) {
         console.error("게시글 작성 실패:", err);
