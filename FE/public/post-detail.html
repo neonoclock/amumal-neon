@@ -3,15 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>책갈피 - 게시글 상세</title>
+    <title>책갈피 - 게시글</title>
     <link rel="stylesheet" href="./assets/css/post-detail.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="header-inner">
-        <a class="back" href="javascript:history.back()" aria-label="뒤로가기"
-          >‹</a
-        >
+        <a href="./board.html" class="back" aria-label="목록으로 돌아가기">
+          ←
+        </a>
+
         <h1 class="brand">
           <a href="./board.html">책갈피</a>
         </h1>
@@ -22,9 +23,9 @@
             id="avatarBtn"
             aria-haspopup="menu"
             aria-expanded="false"
-            aria-label="내 프로필"
+            aria-label="프로필 메뉴"
           >
-            👩🏻‍💻
+            🐧
           </button>
           <nav
             class="avatar-menu"
@@ -42,61 +43,61 @@
       </div>
     </header>
 
-    <main class="page">
-      <article class="post">
-        <h2 class="post-title">제목 1</h2>
+    <main>
+      <article class="page post">
+        <div class="page-inner">
+          <h2 class="post-title">(제목 없음)</h2>
 
-        <div class="meta-line">
-          <div class="author">
-            <img
-              class="author-avatar"
-              src="./assets/img/profile-sample.png"
-              alt="작성자 프로필"
-            />
-            <div class="author-text">
-              <span class="name">더미 작성자 1</span>
-              <time class="date">2021-01-01 00:00:00</time>
+          <div class="meta-line">
+            <div class="author">
+              <img
+                class="author-avatar"
+                src="./assets/img/profile-sample.png"
+                alt="작성자 아바타"
+              />
+              <div class="author-text">
+                <span class="name">작성자</span>
+                <time class="date"></time>
+              </div>
+            </div>
+
+            <div class="actions"></div>
+          </div>
+
+          <div class="media"></div>
+
+          <div class="content"></div>
+
+          <div class="stats">
+            <button class="stat">
+              <strong>0</strong>
+              <span>좋아요</span>
+            </button>
+            <div class="stat">
+              <strong>0</strong>
+              <span>조회수</span>
+            </div>
+            <div class="stat">
+              <strong>0</strong>
+              <span>댓글</span>
             </div>
           </div>
 
-          <div class="actions">
-            <button class="chip">수정</button>
-            <button class="chip">삭제</button>
-          </div>
-        </div>
+          <hr class="divider" />
 
-        <div class="media"></div>
+          <section class="card comment-write">
+            <textarea
+              placeholder="댓글을 입력해주세요."
+              aria-label="댓글 입력"
+            ></textarea>
+            <div class="right">
+              <button class="btn primary" type="button">댓글 등록</button>
+            </div>
+          </section>
 
-        <div class="content">
-          <p>본문 내용</p>
-        </div>
-
-        <div class="stats">
-          <button class="stat">
-            <strong>123</strong>
-            <span>좋아요수</span>
-          </button>
-          <button class="stat">
-            <strong>123</strong>
-            <span>조회수</span>
-          </button>
-          <button class="stat">
-            <strong>123</strong>
-            <span>댓글</span>
-          </button>
+          <section class="card comments" aria-label="댓글 목록"></section>
         </div>
       </article>
-
-      <hr class="divider" />
-
-      <section class="comment-write card">
-        <textarea placeholder="댓글을 남겨주세요!"></textarea>
-        <div class="right">
-          <button class="btn primary">댓글 등록</button>
-        </div>
-      </section>
-
-      <section class="comments"></section>
     </main>
 
     <script type="module" src="./assets/js/pages/post-detail.js"></script>

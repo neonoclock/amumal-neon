@@ -214,16 +214,11 @@ function renderComments() {
 
   list.forEach((c) => {
     const commentId = c.comment_id ?? c.id ?? c.commentId;
-
     const content = c.content ?? "";
-
     const createdAt = c.created_at || c.createdAt;
-
     const authorName =
       c.author_name || c.authorName || c.author?.nickname || "익명";
-
     const authorId = c.author_id || c.authorId || c.author?.id;
-
     const isMine = me && authorId && Number(me) === Number(authorId);
 
     const article = document.createElement("article");
@@ -525,6 +520,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   cacheDOM();
+
   await loadMyAvatar("[POST-DETAIL]");
   setupAvatarMenu();
 
